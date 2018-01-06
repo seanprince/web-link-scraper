@@ -1,0 +1,60 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	   xmlns:jaxrs="http://cxf.apache.org/jaxrs"
+	   xmlns="http://www.springframework.org/schema/beans"
+	   xmlns:util="http://www.springframework.org/schema/util"
+	   xsi:schemaLocation="http://www.springframework.org/schema/beans
+	   http://www.springframework.org/schema/beans/spring-beans.xsd
+	   http://cxf.apache.org/jaxrs http://cxf.apache.org/schemas/jaxrs.xsd   http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+
+	<import resource="classpath:META-INF/sp/wls-services-context.xml"/>
+
+	<bean id="messageSource" class="org.springframework.context.support.ReloadableResourceBundleMessageSource">
+		<property name="basenames">
+			<list>
+				<!--suppress SpringModelInspection -->
+				<value>classpath:wls-common-messages</value>
+				<!--suppress SpringModelInspection -->
+				<value>classpath:wls-data-access-messages</value>
+				<!--suppress SpringModelInspection -->
+				<value>classpath:wls-flow-messages</value>
+				<!--suppress SpringModelInspection -->
+				<value>classpath:wls-services-messages</value>
+				<!--suppress SpringModelInspection -->
+				<value>classpath:wls-rest-messages</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="linksRestV1" class="com.sp.wls.rest.config.LinksResourceImpl" scope="prototype">
+		<property name="linksService" ref="linksService"/>
+	</bean>
+
+	<bean id="xssStringObjectMapper" class="com.sp.wls.rest.common.utils.XssStringObjectMapper"/>
+
+	<jaxrs:server id="restV1Endpoint" address="/v1"
+				  staticSubresourceResolution="true"
+				  beanNames="linksRestV1">
+		<jaxrs:providers>
+			<bean class="com.sp.wls.rest.common.exception.WlsServiceExceptionMapper"/>
+			<bean class="org.apache.cxf.jaxrs.model.wadl.WadlGenerator">
+				<property name="ignoreRequests" value="true"/>
+			</bean>
+			<bean class="com.sp.wls.rest.common.response.SuccessResponseHandler"/>
+			<bean class="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider">
+				<property name="mapper" ref="xssStringObjectMapper"/>
+				<property name="annotationsToUse">
+					<util:constant static-field="com.fasterxml.jackson.jaxrs.json.JacksonJaxbJsonProvider.DEFAULT_ANNOTATIONS"/>
+				</property>
+			</bean>
+		</jaxrs:providers>
+
+		<jaxrs:properties>
+			<entry key="org.apache.cxf.endpoint.private" value="true"/>
+		</jaxrs:properties>
+
+		<jaxrs:extensionMappings>
+			<entry key="json" value="application/json;charset=UTF-8"/>
+		</jaxrs:extensionMappings>
+	</jaxrs:server>
+
+</beans>

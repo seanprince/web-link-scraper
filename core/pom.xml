@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+
+	<parent>
+		<groupId>com.sp.wls</groupId>
+		<artifactId>web-link-scraper</artifactId>
+		<version>1.0-SNAPSHOT</version>
+	</parent>
+
+	<packaging>pom</packaging>
+	<artifactId>wls-core</artifactId>
+
+	<name>Core</name>
+	<description>Core</description>
+
+	<profiles>
+		<profile>
+			<!-- Use the development profile for building and deploying all components
+			     This can and should include test modules, integration test modules, etc.
+			-->
+			<id>development</id>
+			<activation>
+				<activeByDefault>true</activeByDefault>
+			</activation>
+			<modules>
+				<module>common</module>
+				<module>services</module>
+			</modules>
+		</profile>
+
+	</profiles>
+
+</project>

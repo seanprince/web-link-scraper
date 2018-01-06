@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration scan="true" scanPeriod="60 seconds" debug="true">
+
+	<timestamp key="logFileTimestamp" datePattern="yyyy-MM-dd-HHmmss"/>
+
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>OFF</level>
+		</filter>
+		<encoder>
+			<pattern>[%date | %-5level | %1logger] %msg%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="file-sifting" class="ch.qos.logback.classic.sift.SiftingAppender">
+		<discriminator class="ch.qos.logback.classic.sift.JNDIBasedContextDiscriminator">
+			<defaultValue>server</defaultValue>
+		</discriminator>
+		<sift>
+			<appender name="file-rolling" class="ch.qos.logback.core.rolling.RollingFileAppender">
+				<file>../logs/${contextName}.log</file>
+				<encoder>
+					<pattern>[%date | %-5level | %1logger] %msg%n</pattern>
+				</encoder>
+				<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+					<fileNamePattern>../logs/${contextName}.%d{yyyy-MM-dd}.log</fileNamePattern>
+					<maxHistory>30</maxHistory>
+				</rollingPolicy>
+			</appender>
+		</sift>
+	</appender>
+
+	<root level="INFO">
+		<appender-ref ref="console"/>
+		<appender-ref ref="file-sifting"/>
+	</root>
+
+</configuration>

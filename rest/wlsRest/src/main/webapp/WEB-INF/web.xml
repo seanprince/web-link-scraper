@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xmlns="http://java.sun.com/xml/ns/javaee"
+		 xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+		 id="WLS" version="3.0">
+
+	<display-name>WLS Rest</display-name>
+
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>WEB-INF/applicationContext.xml</param-value>
+	</context-param>
+	<context-param>
+		<param-name>unsecuredPatterns</param-name>
+		<param-value>/**/authProviderType</param-value>
+	</context-param>
+
+	<listener>
+		<listener-class>com.sp.wls.rest.servlet.LoggingConfigurationContextListener</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>org.springframework.web.context.request.RequestContextListener</listener-class>
+	</listener>
+
+	<listener>
+		<listener-class>ch.qos.logback.classic.selector.servlet.ContextDetachingSCL</listener-class>
+	</listener>
+
+	<servlet>
+		<display-name>CXF Servlet</display-name>
+		<servlet-name>CXFServlet</servlet-name>
+		<servlet-class>org.apache.cxf.transport.servlet.CXFServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+	<servlet-mapping>
+		<servlet-name>CXFServlet</servlet-name>
+		<url-pattern>/*</url-pattern>
+	</servlet-mapping>
+
+	<filter>
+		<filter-name>LoggerContextFilter</filter-name>
+		<filter-class>ch.qos.logback.classic.selector.servlet.LoggerContextFilter</filter-class>
+	</filter>
+
+	<filter-mapping>
+		<filter-name>LoggerContextFilter</filter-name>
+		<url-pattern>/*</url-pattern>
+	</filter-mapping>
+
+	<env-entry>
+		<description>JNDI logging context for this app</description>
+		<env-entry-name>logback/context-name</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>wls-rest</env-entry-value>
+	</env-entry>
+
+	<env-entry>
+		<description>URL for configuring logback context</description>
+		<env-entry-name>logback/configuration-resource</env-entry-name>
+		<env-entry-type>java.lang.String</env-entry-type>
+		<env-entry-value>wls-logback-configuration.xml</env-entry-value>
+	</env-entry>
+
+</web-app>
